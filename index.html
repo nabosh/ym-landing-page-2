@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YourMarketer - AI Writing Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/dark-logo.png" type="image/png">
+
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .hero-gradient-text {
+            background: linear-gradient(to right, #4F46E5, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glassmorphism-header {
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Semi-transparent white */
+            backdrop-filter: blur(12px);
+            /* Blur effect */
+            -webkit-backdrop-filter: blur(12px);
+            /* Safari support */
+        }
+
+        .section-glow {
+            position: relative;
+        }
+
+        .section-glow::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background-image: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, transparent 60%);
+            z-index: -1;
+            opacity: 0.5;
+            animation: pulseGlow 5s infinite ease-in-out;
+        }
+
+        /* Removed the first, faulty @keyframes pulseGlow definition. Kept the second, correct one. */
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.7;
+            }
+        }
+
+        /* Carousel Styles */
+        .carousel-track {
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-dot.active {
+            background-color: #4F46E5;
+            /* Primary color (indigo-600) */
+            transform: scale(1.2);
+        }
+
+        .carousel-dot {
+            background-color: #D1D5DB;
+            /* gray-300 */
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .mobile-nav {
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(100%);
+            /* Initially off-screen to the right */
+        }
+
+        .mobile-nav.open {
+            transform: translateX(0);
+            /* Slides in from the right */
+        }
+
+        /* Fallback for images if they fail to load - general styles for img */
+        /* These ::before and ::after pseudo-elements might interfere with specific image layouts if not carefully managed. */
+        /* Consider scoping them or using them more selectively if issues arise. */
+        img {
+            display: block;
+            /* Ensures proper layout */
+            position: relative;
+            /* Needed for ::before and ::after absolute positioning relative to the img */
+        }
+
+        /* The following ::before and ::after are general fallbacks. */
+        /* If an image fails, these create a placeholder box and show alt text. */
+        /* This might not be desired for all images (e.g. tiny icons). */
+        /* img::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-color: #f3f4f6;
+      border: 1px dashed #d1d5db;
+      box-sizing: border-box;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    img::after {
+      content: attr(alt);
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #6b7280;
+      text-align: center;
+      font-size: 0.875rem;
+      padding: 0.5rem;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 1; 
+    } */
+        /* Commenting out the generic img::before and img::after for now as they can be overly broad. */
+        /* Individual onerror handlers are a more targeted way for fallbacks. */
+    </style>
+</head>
+
+<body class="bg-white text-gray-800">
+    <div class="flex flex-col min-h-screen">
+        <header id="header" class="sticky top-0 z-50 w-full border-b border-gray-200 glassmorphism-header">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <a href="#" class="flex items-center space-x-2 text-2xl font-bold text-gray-900">
+                        <img src="images/dark-logo.png" alt="YourMarketer Logo" class="h-8 w-auto rounded-lg object-contain"
+                            onerror="this.style.display='none'; this.onerror=null; const p=document.createElement('div'); p.className='h-8 w-auto px-2 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm'; p.innerText='YM'; this.parentNode.insertBefore(p,this);">
+                    </a>
+
+                    <nav class="hidden md:flex space-x-8 items-center">
+                        <a href="#features"
+                            class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Features</a>
+                        <a href="#pricing"
+                            class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Pricing</a>
+                        <a href="#" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Blog</a>
+                        <a href="#pricing"
+                            class="ml-4 px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all">
+                            Get Started
+                        </a>
+                    </nav>
+
+                    <div class="md:hidden">
+                        <button id="mobile-menu-button" class="text-gray-600 hover:text-indigo-600 focus:outline-none">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                            <span class="sr-only">Toggle menu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mobile-nav" class="mobile-nav fixed inset-0 z-40 flex flex-col bg-white p-6 space-y-4 md:hidden">
+                <div class="flex justify-between items-center">
+                    <a href="#" class="flex items-center space-x-2 text-2xl font-bold text-gray-900">
+                        <img src="images/dark-logo.png" alt="YourMarketer Logo" class="h-8 w-auto rounded-lg object-contain"
+                            onerror="this.style.display='none'; this.onerror=null; const p=document.createElement('div'); p.className='h-8 w-auto px-2 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm'; p.innerText='YM'; this.parentNode.insertBefore(p,this);">
+                        <span>YourMarketer</span>
+                    </a>
+                    <button id="close-mobile-menu-button"
+                        class="text-gray-600 hover:text-indigo-600 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span class="sr-only">Close menu</span>
+                    </button>
+                </div>
+                <a href="#features"
+                    class="block py-2 text-gray-600 hover:text-indigo-600 font-medium transition-colors mobile-nav-link">Features</a>
+                <a href="#pricing"
+                    class="block py-2 text-gray-600 hover:text-indigo-600 font-medium transition-colors mobile-nav-link">Pricing</a>
+                <a href="#"
+                    class="block py-2 text-gray-600 hover:text-indigo-600 font-medium transition-colors mobile-nav-link">Blog</a>
+                <a href="#pricing"
+                    class="mt-4 w-full text-center px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all mobile-nav-link">
+                    Get Started
+                </a>
+            </div>
+        </header>
+
+        <main class="flex-1">
+            <section
+                class="relative bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-20 md:py-32 overflow-hidden">
+                <div class="absolute inset-0 opacity-20">
+                    <div
+                        class="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-200 rounded-full filter blur-2xl opacity-50 animate-pulse">
+                    </div>
+                    <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-200 rounded-full filter blur-2xl opacity-50 animate-pulse animation-delay-2000"
+                        style="animation-delay: 2s;"></div>
+                </div>
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid lg:grid-cols-2 gap-12 items-center">
+                        <div class="text-center lg:text-left">
+                            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900">
+                                Start Writing <span class="hero-gradient-text">Better & Faster</span> - Today!
+                            </h1>
+                            <p class="mt-6 text-lg sm:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0">
+                                Never stare at a blank page again. Instantly generate high-quality drafts for all your
+                                content needs and
+                                slash your writing time. Discover how below.
+                            </p>
+                            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                                <a href="#pricing"
+                                    class="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-white bg-indigo-600 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all transform hover:scale-105">
+                                    Start for free
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round" class="ml-2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mt-12 lg:mt-0">
+                            <div class="relative mx-auto w-full max-w-lg lg:max-w-none">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-xl transform -rotate-3 shadow-2xl">
+                                </div>
+                                <img src="images/hero-image.png" alt="Content creation software interface"
+                                    class="relative rounded-xl shadow-xl w-full h-auto object-cover transform transition-transform duration-500 hover:scale-105 aspect-[3/2]"
+                                    onerror="this.onerror=null; this.src='https://placehold.co/600x400/E0E7FF/4F46E5?text=AI+Dashboard+Preview&font=Inter';">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="py-16 md:py-24 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Struggling to Keep Up?</h2>
+                        <p class="mt-4 text-lg text-gray-600">
+                            You know the cycle all too well. The never-ending content calendar, the constant pressure to
+                            churn out
+                            fresh blogs, social posts, emails, and scripts. You spend endless hours staring at a blank
+                            screen,
+                            battling writer's block, and tweaking sentences, hoping they finally sound right. It's
+                            exhausting, isn't
+                            it? This constant struggle often results in:
+                        </p>
+                    </div>
+                    <div class="mt-16 grid md:grid-cols-2 gap-x-12 gap-y-10 items-center">
+                        <div class="relative">
+                            <img src="images/harder.png" alt="Frustrated content creator"
+                                class="rounded-xl shadow-xl w-full object-cover aspect-[5/4]"
+                                onerror="this.onerror=null; this.src='https://placehold.co/500x400/FFF1F2/EF4444?text=Content+Overwhelm&font=Inter';">
+                        </div>
+                        <div class="space-y-8">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 p-2 bg-red-100 rounded-full">
+                                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900">Dead Ends</h3>
+                                    <p class="mt-1 text-gray-600">Endless hours spent brainstorming, often leading
+                                        nowhere.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 p-2 bg-red-100 rounded-full">
+                                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900">Writer's Block</h3>
+                                    <p class="mt-1 text-gray-600">Frustration with generic content that doesn't connect
+                                        or convert.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 p-2 bg-red-100 rounded-full">
+                                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900">Endless Deadlines</h3>
+                                    <p class="mt-1 text-gray-600">Missed deadlines and lost opportunities because
+                                        content creation takes
+                                        too long.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 p-2 bg-red-100 rounded-full">
+                                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900">Inconsistent Results</h3>
+                                    <p class="mt-1 text-gray-600">Lack of standardization leads to varying quality and
+                                        unpredictable
+                                        outcomes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-16 md:py-24 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 section-glow">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="text-center max-w-3xl mx-auto">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Sometimes Easier <u
+                                class="decoration-indigo-500 decoration-4 underline-offset-4">is</u> Better</h2>
+                        <p class="mt-4 text-lg text-gray-600">
+                            Imagine effortless content creation. YM empowers you with AI tools that instantly transform
+                            your ideas
+                            into compelling text. Say goodbye to writer's block and hello to consistent, high-quality
+                            output, all at a
+                            speed you never thought possible.
+                        </p>
+                    </div>
+                    <div class="mt-16 grid md:grid-cols-2 gap-x-12 gap-y-10 items-center">
+                        <div class="space-y-8 md:order-first">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 p-2 bg-green-100 rounded-full">
+                                    <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900">Unlimited Ideas</h3>
+                                    <p class="mt-1 text-gray-600">Generate fresh blog topics and video concepts in
+                                        minutes, not days.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 p-2 bg-green-100 rounded-full">
+                                    <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900">Craft Compelling Copy</h3>
+                                    <p class="mt-1 text-gray-600">Effortlessly produce engaging scripts, ad copy, and
+                                        website content that
+                                        resonates.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 p-2 bg-green-100 rounded-full">
+                                    <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900">Save Precious Time</h3>
+                                    <p class="mt-1 text-gray-600">Spend minutes instead of days writing and free up time
+                                        to focus on
+                                        strategy and creativity.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 p-2 bg-green-100 rounded-full">
+                                    <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-900">Work With Confidence</h3>
+                                    <p class="mt-1 text-gray-600">Produce error-free, polished content for any platform,
+                                        every time.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="relative md:order-last">
+                            <img src="images/easier.png" alt="Streamlined content creation process"
+                                class="rounded-xl shadow-xl w-full object-cover aspect-[5/4]"
+                                onerror="this.onerror=null; this.src='https://placehold.co/500x400/ECFDF5/10B981?text=Effortless+Creation&font=Inter';">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="testimonials" class="py-16 md:py-24 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Stop Fighting ChatGPT</h2>
+                        <p class="mt-4 text-lg text-gray-600">
+                            Our Templates let you leverage the power of AI without the headache. No more endless prompts
+                            or tweaking.
+                            Pick the Use Template for your content type and let our AI do the rest. Our templates are
+                            designed to help
+                            you get the most out of your AI writing assistant. Just plug in your ideas and let our AI do
+                            the rest.
+                        </p>
+                    </div>
+                    <div class="mt-16 max-w-4xl mx-auto">
+                        <div class="shadow-2xl rounded-xl overflow-hidden border border-gray-200">
+                            <div class="carousel-container relative" id="testimonial-carousel" tabindex="0">
+                                <div class="carousel-track flex">
+                                    <div class="carousel-slide min-w-full flex-shrink-0">
+                                        <img src="images/carousel-1.png" alt="Template selection view"
+                                            class="w-full h-auto object-contain mx-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
+                                            onerror="this.onerror=null; this.src='https://placehold.co/1200x700/EDE9FE/4338CA?text=Template+Selection+UI&font=Inter';">
+                                    </div>
+                                    <div class="carousel-slide min-w-full flex-shrink-0">
+                                        <img src="images/carousel-2.png" alt="Content generation interface"
+                                            class="w-full h-auto object-contain mx-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
+                                            onerror="this.onerror=null; this.src='https://placehold.co/1200x700/F0F9FF/0284C7?text=Content+Generation+Interface&font=Inter';">
+                                    </div>
+                                    <div class="carousel-slide min-w-full flex-shrink-0">
+                                        <img src="images/carousel-3.png" alt="Editing generated content"
+                                            class="w-full h-auto object-contain mx-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
+                                            onerror="this.onerror=null; this.src='https://placehold.co/1200x700/F3E8FF/7E22CE?text=Editing+Generated+Content&font=Inter';">
+                                    </div>
+                                </div>
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/50 to-transparent flex justify-between items-center">
+                                    <button
+                                        class="carousel-prev p-2 rounded-full bg-white/80 hover:bg-white text-gray-700 hover:text-indigo-600 transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Previous slide">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="carousel-dots flex space-x-2">
+                                    </div>
+                                    <button
+                                        class="carousel-next p-2 rounded-full bg-white/80 hover:bg-white text-gray-700 hover:text-indigo-600 transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        aria-label="Next slide">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="pricing" class="py-16 md:py-24 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Start Saving Time</h2>
+                        <p class="mt-4 text-lg text-gray-600">
+                            Choose the plan that's right for your team. All plans include a 14-day free trial.
+                        </p>
+                    </div>
+
+                    <div class="mt-16 grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        <div
+                            class="bg-white rounded-xl shadow-xl p-8 flex flex-col transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="text-2xl font-semibold text-gray-900">Starter Plan</h3>
+                            <!-- <p class="mt-2 text-gray-600">Perfect for small teams just getting started.</p> -->
+                            <div class="mt-6">
+                                <span class="text-5xl font-extrabold text-gray-900">$12</span>
+                                <span class="text-lg font-medium text-gray-500">/month</span>
+                            </div>
+                            <ul class="mt-8 space-y-3 text-gray-600 flex-grow">
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>50 Word limit</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>5 Image limit</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Minute limit: 1000</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Character limit: 200,000</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Basic support</span></li>
+                            </ul>
+                            <a href="#"
+                                class="mt-10 block w-full px-6 py-3 text-center text-base font-medium text-indigo-600 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors">Start
+                                free trial</a>
+                        </div>
+
+                        <div
+                            class="relative bg-white rounded-xl shadow-2xl p-8 flex flex-col border-2 border-indigo-600 transform scale-105">
+                            <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                                <span
+                                    class="inline-flex items-center px-4 py-1.5 text-sm font-semibold text-white bg-indigo-600 rounded-full shadow-md">Most
+                                    Popular</span>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-gray-900">Premium Plan</h3>
+                            <p class="mt-2 text-gray-600">Ideal for growing teams needing more power.</p>
+                            <div class="mt-6">
+                                <span class="text-5xl font-extrabold text-gray-900">$19</span>
+                                <span class="text-lg font-medium text-gray-500">/month</span>
+                            </div>
+                            <ul class="mt-8 space-y-3 text-gray-600 flex-grow">
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Word limit: 100,000</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Image limit: 500</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Minute limit: 5,000</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Character limit: 400,000</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>API Access</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Premium support</span></li>
+                            </ul>
+                            <a href="#"
+                                class="mt-10 block w-full px-6 py-3 text-center text-base font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all">Start
+                                free trial</a>
+                        </div>
+
+                        <div
+                            class="bg-white rounded-xl shadow-xl p-8 flex flex-col transform hover:scale-105 transition-transform duration-300">
+                            <h3 class="text-2xl font-semibold text-gray-900">Platinum Plan</h3>
+                            <p class="mt-2 text-gray-600">For organizations with advanced needs.</p>
+                            <div class="mt-6">
+                                <span class="text-5xl font-extrabold text-gray-900">$29</span>
+                                <span class="text-lg font-medium text-gray-500">/month</span>
+                            </div>
+                            <ul class="mt-8 space-y-3 text-gray-600 flex-grow">
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Image limit: 1,000</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Minute limit: 10,000</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Character limit: 500,000</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>100+ AI Templates</span></li>
+                                <li class="flex items-center space-x-3"><svg
+                                        class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg><span>Dedicated support</span></li>
+                            </ul>
+                            <a href="#"
+                                class="mt-10 block w-full px-6 py-3 text-center text-base font-medium text-indigo-600 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors">Contact
+                                sales</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="faq" class="py-16 md:py-24 bg-white">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Frequently Asked Questions</h2>
+                        <p class="mt-5 text-lg text-gray-600">
+                            Have questions? We've got answers. If you don't find what you're looking for, feel free to
+                            contact us.
+                        </p>
+                    </div>
+                    <div class="mt-16 max-w-3xl mx-auto space-y-6">
+                        <div
+                            class="faq-item bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <details class="group">
+                                <summary class="flex items-center justify-between p-5 sm:p-6 cursor-pointer">
+                                    <h3 class="text-lg font-medium text-gray-900">What kind of content can I create?
+                                    </h3>
+                                    <span class="text-indigo-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor"
+                                            class="w-6 h-6 plus-icon group-open:hidden">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 4.5v15m7.5-7.5h-15" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor"
+                                            class="w-6 h-6 minus-icon hidden group-open:block">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="p-5 sm:p-6 pt-0 text-gray-600">
+                                    <p>YourMarketer can help you create a wide variety of content, including blog posts,
+                                        articles, social media updates, ad copy, email newsletters, video scripts,
+                                        website content, product descriptions, and much more. Our templates cover
+                                        diverse marketing and content needs.</p>
+                                </div>
+                            </details>
+                        </div>
+                        <div
+                            class="faq-item bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <details class="group">
+                                <summary class="flex items-center justify-between p-5 sm:p-6 cursor-pointer">
+                                    <h3 class="text-lg font-medium text-gray-900">Is there a free trial available?</h3>
+                                    <span class="text-indigo-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor"
+                                            class="w-6 h-6 plus-icon group-open:hidden">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 4.5v15m7.5-7.5h-15" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor"
+                                            class="w-6 h-6 minus-icon hidden group-open:block">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="p-5 sm:p-6 pt-0 text-gray-600">
+                                    <p>Yes! We offer a 14-day free trial on all our plans. This allows you to explore
+                                        all the features and see how YourMarketer can revolutionize your content
+                                        creation process before committing. No credit card is required to start your
+                                        trial.</p>
+                                </div>
+                            </details>
+                        </div>
+                        <div
+                            class="faq-item bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <details class="group">
+                                <summary class="flex items-center justify-between p-5 sm:p-6 cursor-pointer">
+                                    <h3 class="text-lg font-medium text-gray-900">How does the AI work? Is it easy to
+                                        use?</h3>
+                                    <span class="text-indigo-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor"
+                                            class="w-6 h-6 plus-icon group-open:hidden">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 4.5v15m7.5-7.5h-15" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor"
+                                            class="w-6 h-6 minus-icon hidden group-open:block">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="p-5 sm:p-6 pt-0 text-gray-600">
+                                    <p>Our platform uses advanced AI language models trained on vast amounts of text
+                                        data. We've designed YourMarketer to be incredibly user-friendly. You simply
+                                        choose a template for your desired content type, provide some key inputs or
+                                        ideas, and our AI generates a draft for you. You can then easily edit and refine
+                                        the output to match your brand voice and specific needs.</p>
+                                </div>
+                            </details>
+                        </div>
+                        <div
+                            class="faq-item bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <details class="group">
+                                <summary class="flex items-center justify-between p-5 sm:p-6 cursor-pointer">
+                                    <h3 class="text-lg font-medium text-gray-900">Can I cancel my subscription anytime?
+                                    </h3>
+                                    <span class="text-indigo-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor"
+                                            class="w-6 h-6 plus-icon group-open:hidden">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 4.5v15m7.5-7.5h-15" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="2" stroke="currentColor"
+                                            class="w-6 h-6 minus-icon hidden group-open:block">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="p-5 sm:p-6 pt-0 text-gray-600">
+                                    <p>Absolutely. You can cancel your subscription at any time directly from your
+                                        account settings. If you cancel, you'll retain access to your plan's features
+                                        until the end of your current billing period. There are no long-term contracts
+                                        or hidden fees.</p>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="bg-gray-900 text-gray-400">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+                <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+                    <div class="space-y-8 xl:col-span-1">
+                        <a href="#" class="flex items-center space-x-2 text-2xl font-bold text-white">
+                            <img src="images/ym-logo-white.png" alt="YourMarketer Logo"
+                                class="h-8 w-auto rounded-lg object-contain"
+                                onerror="this.style.display='none'; this.onerror=null; const p=document.createElement('div'); p.className='h-8 w-auto px-2 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm'; p.innerText='YM'; this.parentNode.insertBefore(p,this);">
+                            <span></span>
+                        </a>
+                        <p class="text-gray-400 text-base">
+                            Supercharge your content creation with AI.
+                        </p>
+                        <div class="flex space-x-6">
+                            <a href="https://www.instagram.com/yourmarketer.ai/"
+                                class="text-gray-400 hover:text-gray-300">
+                                <span class="sr-only">Instagram</span>
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill-rule="evenodd"
+                                        d="M12 2.163c3.204 0 3.584.012 4.85.07 1.172.052 1.963.242 2.678.522.748.301 1.296.712 1.858 1.274.562.562.973 1.11 1.274 1.858.28.715.47 1.506.522 2.678.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.052 1.172-.242 1.963-.522 2.678-.301.748-.712 1.296-1.274 1.858-.562.562-1.11.973-1.858 1.274-.715.28-1.506.47-2.678.522-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.172-.052-1.963-.242-2.678-.522-.748-.301-1.296-.712-1.858-1.274-.562-.562-.973-1.11-1.274-1.858-.28-.715-.47-1.506-.522-2.678-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.052-1.172.242-1.963.522-2.678.301-.748.712-1.296 1.274-1.858.562-.562 1.11-.973 1.858-1.274.715-.28 1.506-.47 2.678-.522C8.416 2.175 8.796 2.163 12 2.163zm0 1.802c-3.115 0-3.486.01-4.713.065-1.11.05-1.77.238-2.296.448-.546.224-.972.512-1.401.94-.428.428-.716.855-.94 1.401-.21.526-.398 1.186-.448 2.296-.055 1.227-.065 1.598-.065 4.713s.01 3.486.065 4.713c.05 1.11.238 1.77.448 2.296.224.546.512.972.94 1.401.428.428.855.716 1.401.94.526.21 1.186.398 2.296.448 1.227.055 1.598.065 4.713.065s3.486-.01 4.713-.065c1.11-.05 1.77-.238 2.296-.448.546-.224.972-.512 1.401-.94.428-.428.716-.855.94-1.401.21-.526.398-1.186.448-2.296.055-1.227.065-1.598.065-4.713s-.01-3.486-.065-4.713c-.05-1.11-.238-1.77-.448-2.296-.224-.546-.512-.972-.94-1.401-.428-.428-.855-.716-1.401-.94-.526-.21-1.186-.398-2.296-.448C15.486 3.975 15.115 3.965 12 3.965zm0 3.091c-2.54 0-4.587 2.047-4.587 4.587s2.047 4.587 4.587 4.587 4.587-2.047 4.587-4.587-2.047-4.587-4.587-4.587zm0 7.373c-1.539 0-2.787-1.248-2.787-2.787s1.248-2.787 2.787-2.787 2.787 1.248 2.787 2.787-1.248 2.787-2.787 2.787zm4.965-7.177c0 .768-.622 1.39-1.39 1.39s-1.39-.622-1.39-1.39.622-1.39 1.39-1.39 1.39.622 1.39 1.39z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <a href="https://www.tiktok.com/@yourmarketerai" class="text-gray-400 hover:text-gray-300">
+                                <span class="sr-only">TikTok</span>
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path
+                                        d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
+                        <div class="md:grid md:grid-cols-2 md:gap-8">
+                            <!-- <div>
+                <h3 class="text-sm font-semibold tracking-wider text-gray-300 uppercase">Solutions</h3>
+                <ul role="list" class="mt-4 space-y-4">
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">AI Writing</a></li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Content
+                      Generation</a></li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Marketing Copy</a>
+                  </li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Blog Automation</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-12 md:mt-0">
+                <h3 class="text-sm font-semibold tracking-wider text-gray-300 uppercase">Support</h3>
+                <ul role="list" class="mt-4 space-y-4">
+                  <li><a href="#pricing" class="text-base text-gray-400 hover:text-white">Pricing</a>
+                  </li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Documentation</a>
+                  </li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Guides</a></li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">API Status</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="md:grid md:grid-cols-2 md:gap-8">
+              <div>
+                <h3 class="text-sm font-semibold tracking-wider text-gray-300 uppercase">Company</h3>
+                <ul role="list" class="mt-4 space-y-4">
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">About</a></li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Blog</a></li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Jobs</a></li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Press</a></li>
+                </ul>
+              </div> -->
+                            <!-- <div class="mt-12 md:mt-0">
+                <h3 class="text-sm font-semibold tracking-wider text-gray-300 uppercase">Legal</h3>
+                <ul role="list" class="mt-4 space-y-4">
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Privacy Policy</a>
+                  </li>
+                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Terms of
+                      Service</a></li>
+                </ul>
+              </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 border-t border-gray-700 pt-8">
+                    <p class="text-base text-gray-400 xl:text-center">
+                        &copy;
+                        <script>document.write(new Date().getFullYear())</script> YourMarketer.ai. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMobileMenuButton = document.getElementById('close-mobile-menu-button');
+            const mobileNav = document.getElementById('mobile-nav');
+            const mobileNavLinks = mobileNav.querySelectorAll('.mobile-nav-link'); // Get all links in mobile nav
+
+            if (mobileMenuButton && mobileNav && closeMobileMenuButton) {
+                mobileMenuButton.addEventListener('click', function () {
+                    mobileNav.classList.add('open');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+                });
+                closeMobileMenuButton.addEventListener('click', function () {
+                    mobileNav.classList.remove('open');
+                    document.body.style.overflow = ''; // Re-enable scrolling
+                });
+                // Close nav when a link is clicked
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileNav.classList.remove('open');
+                        document.body.style.overflow = ''; // Re-enable scrolling
+                    });
+                });
+            }
+
+            // Carousel Logic
+            const carousels = document.querySelectorAll('.carousel-container');
+            carousels.forEach(carousel => {
+                const track = carousel.querySelector('.carousel-track');
+                if (!track) {
+                    console.warn('Carousel track not found for a carousel instance.');
+                    return;
+                }
+                const slides = Array.from(track.children).filter(child => child.classList.contains('carousel-slide'));
+                if (slides.length === 0) {
+                    const navControls = carousel.querySelector('.absolute.bottom-0');
+                    if (navControls) navControls.style.display = 'none';
+                    console.warn('No slides found for a carousel instance.');
+                    return;
+                }
+
+                const dotsContainer = carousel.querySelector('.carousel-dots');
+                const prevButton = carousel.querySelector('.carousel-prev');
+                const nextButton = carousel.querySelector('.carousel-next');
+                let currentIndex = 0;
+                let autoplayInterval;
+                const AUTOPLAY_DELAY = 5000;
+
+                function updateDots() {
+                    if (!dotsContainer) return;
+                    dotsContainer.innerHTML = '';
+                    slides.forEach((_, index) => {
+                        const dot = document.createElement('button');
+                        dot.classList.add('carousel-dot', 'w-2.5', 'h-2.5', 'rounded-full', 'focus:outline-none', 'transition-all', 'cursor-pointer');
+                        if (index === currentIndex) {
+                            dot.classList.add('active');
+                        }
+                        dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                        dot.addEventListener('click', () => {
+                            goToSlide(index);
+                            resetAutoplay();
+                        });
+                        dotsContainer.appendChild(dot);
+                    });
+                }
+
+                function goToSlide(index) {
+                    currentIndex = (index + slides.length) % slides.length;
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    updateDots();
+                }
+
+                function startAutoplay() {
+                    stopAutoplay();
+                    if (slides.length > 1) {
+                        autoplayInterval = setInterval(() => {
+                            goToSlide(currentIndex + 1);
+                        }, AUTOPLAY_DELAY);
+                    }
+                }
+
+                function stopAutoplay() {
+                    clearInterval(autoplayInterval);
+                }
+
+                function resetAutoplay() {
+                    stopAutoplay();
+                    startAutoplay();
+                }
+
+                if (prevButton) {
+                    prevButton.addEventListener('click', () => {
+                        goToSlide(currentIndex - 1);
+                        resetAutoplay();
+                    });
+                } else {
+                    console.warn("Previous button not found for a carousel instance.");
+                }
+
+                if (nextButton) {
+                    nextButton.addEventListener('click', () => {
+                        goToSlide(currentIndex + 1);
+                        resetAutoplay();
+                    });
+                } else {
+                    console.warn("Next button not found for a carousel instance.");
+                }
+
+                let touchStartX = 0;
+                let touchEndX = 0;
+                const swipeThreshold = 50;
+
+                track.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                    stopAutoplay();
+                }, { passive: true });
+
+                track.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, { passive: true });
+
+                function handleSwipe() {
+                    if (touchStartX - touchEndX > swipeThreshold) {
+                        goToSlide(currentIndex + 1);
+                    } else if (touchEndX - touchStartX > swipeThreshold) {
+                        goToSlide(currentIndex - 1);
+                    }
+                    resetAutoplay(); // Restart autoplay after swipe, regardless of whether slide changed
+                }
+
+                carousel.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        goToSlide(currentIndex - 1);
+                        resetAutoplay();
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        goToSlide(currentIndex + 1);
+                        resetAutoplay();
+                    }
+                });
+
+                updateDots();
+                goToSlide(0);
+                startAutoplay();
+
+                carousel.addEventListener('mouseenter', stopAutoplay);
+                carousel.addEventListener('mouseleave', startAutoplay);
+
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        stopAutoplay();
+                    } else {
+                        startAutoplay();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href.length > 1 && href.startsWith('#')) {
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        e.preventDefault();
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>
