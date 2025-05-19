@@ -49,7 +49,6 @@
             animation: pulseGlow 5s infinite ease-in-out;
         }
 
-        /* Removed the first, faulty @keyframes pulseGlow definition. Kept the second, correct one. */
         @keyframes pulseGlow {
 
             0%,
@@ -67,6 +66,12 @@
         /* Carousel Styles */
         .carousel-track {
             transition: transform 0.5s ease-in-out;
+            /* Ensure the track itself has display flex, which it does via Tailwind 'flex' class */
+        }
+
+        .carousel-slide {
+            /* flex-shrink: 0; is applied by Tailwind class */
+            /* flex items-center justify-center; are for content within the slide */
         }
 
         .carousel-dot.active {
@@ -92,50 +97,11 @@
             /* Slides in from the right */
         }
 
-        /* Fallback for images if they fail to load - general styles for img */
-        /* These ::before and ::after pseudo-elements might interfere with specific image layouts if not carefully managed. */
-        /* Consider scoping them or using them more selectively if issues arise. */
         img {
             display: block;
             /* Ensures proper layout */
             position: relative;
-            /* Needed for ::before and ::after absolute positioning relative to the img */
         }
-
-        /* The following ::before and ::after are general fallbacks. */
-        /* If an image fails, these create a placeholder box and show alt text. */
-        /* This might not be desired for all images (e.g. tiny icons). */
-        /* img::before {
-      content: '';
-      display: block;
-      width: 100%;
-      height: 100%;
-      background-color: #f3f4f6;
-      border: 1px dashed #d1d5db;
-      box-sizing: border-box;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-    }
-
-    img::after {
-      content: attr(alt);
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #6b7280;
-      text-align: center;
-      font-size: 0.875rem;
-      padding: 0.5rem;
-      width: 100%;
-      box-sizing: border-box;
-      z-index: 1; 
-    } */
-        /* Commenting out the generic img::before and img::after for now as they can be overly broad. */
-        /* Individual onerror handlers are a more targeted way for fallbacks. */
     </style>
 </head>
 
@@ -145,7 +111,8 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <a href="#" class="flex items-center space-x-2 text-2xl font-bold text-gray-900">
-                        <img src="images/dark-logo.png" alt="YourMarketer Logo" class="h-8 w-auto rounded-lg object-contain"
+                        <img src="images/dark-logo.png" alt="YourMarketer Logo"
+                            class="h-8 w-auto rounded-lg object-contain"
                             onerror="this.style.display='none'; this.onerror=null; const p=document.createElement('div'); p.className='h-8 w-auto px-2 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm'; p.innerText='YM'; this.parentNode.insertBefore(p,this);">
                     </a>
 
@@ -154,7 +121,6 @@
                             class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Features</a>
                         <a href="#pricing"
                             class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Pricing</a>
-                        <a href="#" class="text-gray-600 hover:text-indigo-600 font-medium transition-colors">Blog</a>
                         <a href="#pricing"
                             class="ml-4 px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all">
                             Get Started
@@ -176,7 +142,8 @@
             <div id="mobile-nav" class="mobile-nav fixed inset-0 z-40 flex flex-col bg-white p-6 space-y-4 md:hidden">
                 <div class="flex justify-between items-center">
                     <a href="#" class="flex items-center space-x-2 text-2xl font-bold text-gray-900">
-                        <img src="images/dark-logo.png" alt="YourMarketer Logo" class="h-8 w-auto rounded-lg object-contain"
+                        <img src="images/dark-logo.png" alt="YourMarketer Logo"
+                            class="h-8 w-auto rounded-lg object-contain"
                             onerror="this.style.display='none'; this.onerror=null; const p=document.createElement('div'); p.className='h-8 w-auto px-2 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm'; p.innerText='YM'; this.parentNode.insertBefore(p,this);">
                         <span>YourMarketer</span>
                     </a>
@@ -437,19 +404,19 @@
                         <div class="shadow-2xl rounded-xl overflow-hidden border border-gray-200">
                             <div class="carousel-container relative" id="testimonial-carousel" tabindex="0">
                                 <div class="carousel-track flex">
-                                    <div class="carousel-slide min-w-full flex-shrink-0">
+                                    <div class="carousel-slide flex-shrink-0 flex items-center justify-center">
                                         <img src="images/carousel-1.png" alt="Template selection view"
-                                            class="w-full h-auto object-contain mx-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
+                                            class="object-contain max-w-full h-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
                                             onerror="this.onerror=null; this.src='https://placehold.co/1200x700/EDE9FE/4338CA?text=Template+Selection+UI&font=Inter';">
                                     </div>
-                                    <div class="carousel-slide min-w-full flex-shrink-0">
+                                    <div class="carousel-slide flex-shrink-0 flex items-center justify-center">
                                         <img src="images/carousel-2.png" alt="Content generation interface"
-                                            class="w-full h-auto object-contain mx-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
+                                            class="object-contain max-w-full h-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
                                             onerror="this.onerror=null; this.src='https://placehold.co/1200x700/F0F9FF/0284C7?text=Content+Generation+Interface&font=Inter';">
                                     </div>
-                                    <div class="carousel-slide min-w-full flex-shrink-0">
+                                    <div class="carousel-slide flex-shrink-0 flex items-center justify-center">
                                         <img src="images/carousel-3.png" alt="Editing generated content"
-                                            class="w-full h-auto object-contain mx-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
+                                            class="object-contain max-w-full h-auto max-h-[450px] sm:max-h-[500px] md:max-h-[550px]"
                                             onerror="this.onerror=null; this.src='https://placehold.co/1200x700/F3E8FF/7E22CE?text=Editing+Generated+Content&font=Inter';">
                                     </div>
                                 </div>
@@ -495,7 +462,6 @@
                         <div
                             class="bg-white rounded-xl shadow-xl p-8 flex flex-col transform hover:scale-105 transition-transform duration-300">
                             <h3 class="text-2xl font-semibold text-gray-900">Starter Plan</h3>
-                            <!-- <p class="mt-2 text-gray-600">Perfect for small teams just getting started.</p> -->
                             <div class="mt-6">
                                 <span class="text-5xl font-extrabold text-gray-900">$12</span>
                                 <span class="text-lg font-medium text-gray-500">/month</span>
@@ -804,7 +770,7 @@
                                 <span class="sr-only">Instagram</span>
                                 <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path fill-rule="evenodd"
-                                        d="M12 2.163c3.204 0 3.584.012 4.85.07 1.172.052 1.963.242 2.678.522.748.301 1.296.712 1.858 1.274.562.562.973 1.11 1.274 1.858.28.715.47 1.506.522 2.678.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.052 1.172-.242 1.963-.522 2.678-.301.748-.712 1.296-1.274 1.858-.562.562-1.11.973-1.858 1.274-.715.28-1.506.47-2.678.522-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.172-.052-1.963-.242-2.678-.522-.748-.301-1.296-.712-1.858-1.274-.562-.562-.973-1.11-1.274-1.858-.28-.715-.47-1.506-.522-2.678-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.052-1.172.242-1.963.522-2.678.301-.748.712-1.296 1.274-1.858.562-.562 1.11-.973 1.858-1.274.715-.28 1.506-.47 2.678-.522C8.416 2.175 8.796 2.163 12 2.163zm0 1.802c-3.115 0-3.486.01-4.713.065-1.11.05-1.77.238-2.296.448-.546.224-.972.512-1.401.94-.428.428-.716.855-.94 1.401-.21.526-.398 1.186-.448 2.296-.055 1.227-.065 1.598-.065 4.713s.01 3.486.065 4.713c.05 1.11.238 1.77.448 2.296.224.546.512.972.94 1.401.428.428.855.716 1.401.94.526.21 1.186.398 2.296.448 1.227.055 1.598.065 4.713.065s3.486-.01 4.713-.065c1.11-.05 1.77-.238 2.296-.448.546-.224.972-.512 1.401-.94.428-.428.716-.855.94-1.401.21-.526.398-1.186.448-2.296.055-1.227.065-1.598.065-4.713s-.01-3.486-.065-4.713c-.05-1.11-.238-1.77-.448-2.296-.224-.546-.512-.972-.94-1.401-.428-.428-.855-.716-1.401-.94-.526-.21-1.186-.398-2.296-.448C15.486 3.975 15.115 3.965 12 3.965zm0 3.091c-2.54 0-4.587 2.047-4.587 4.587s2.047 4.587 4.587 4.587 4.587-2.047 4.587-4.587-2.047-4.587-4.587-4.587zm0 7.373c-1.539 0-2.787-1.248-2.787-2.787s1.248-2.787 2.787-2.787 2.787 1.248 2.787 2.787-1.248 2.787-2.787 2.787zm4.965-7.177c0 .768-.622 1.39-1.39 1.39s-1.39-.622-1.39-1.39.622-1.39 1.39-1.39 1.39.622 1.39 1.39z"
+                                        d="M12 2.163c3.204 0 3.584.012 4.85.07 1.172.052 1.963.242 2.678.522.748.301 1.296.712 1.858 1.274.562.562.973 1.11 1.274 1.858.28.715.47 1.506.522 2.678.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.052 1.172-.242 1.963-.522 2.678-.301.748-.712 1.296-1.274 1.858-.562.562-1.11.973-1.858 1.274-.715.28-1.506.47-2.678.522-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.172-.052-1.963-.242-2.678-.522-.748-.301-1.296-.712-1.858-1.274-.562-.562-.973-1.11-1.274-1.858-.28-.715-.47-1.506-.522-2.678-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.052-1.172.242-1.963.522-2.678.301-.748.712-1.296 1.274-1.858.562-.562 1.11-.973 1.858-1.274.715-.28 1.506-.47 2.678-.522C8.416 2.175 8.796 2.163 12 2.163zm0 1.802c-3.115 0-3.486.01-4.713.065-1.11.05-1.77.238-2.296.448-.546.224-.972.512-1.401.94-.428.428-.716.855-.94 1.401-.21.526-.398 1.186-.448 2.296-.055 1.227-.065 1.598-.065 4.713s.01 3.486.065 4.713c.05 1.11.238 1.77.448 2.296.224.546.512.972.94 1.401.428.428.855.716 1.401.94.526.21 1.186.398 2.296.448 1.227.055 1.598.065 4.713.065s3.486-.01 4.713-.065c1.11-.05 1.77-.238 2.296-.448.546-.224.972.512 1.401.94.428-.428-.716-.855.94-1.401.21-.526.398-1.186.448-2.296.055-1.227.065-1.598.065-4.713s-.01-3.486-.065-4.713c-.05-1.11-.238-1.77-.448-2.296-.224-.546-.512-.972-.94-1.401-.428-.428-.855-.716-1.401-.94-.526-.21-1.186-.398-2.296-.448C15.486 3.975 15.115 3.965 12 3.965zm0 3.091c-2.54 0-4.587 2.047-4.587 4.587s2.047 4.587 4.587 4.587 4.587-2.047 4.587-4.587-2.047-4.587-4.587-4.587zm0 7.373c-1.539 0-2.787-1.248-2.787-2.787s1.248-2.787 2.787-2.787 2.787 1.248 2.787 2.787-1.248 2.787-2.787 2.787zm4.965-7.177c0 .768-.622 1.39-1.39 1.39s-1.39-.622-1.39-1.39.622-1.39 1.39-1.39 1.39.622 1.39 1.39z"
                                         clip-rule="evenodd" />
                                 </svg>
                             </a>
@@ -819,49 +785,8 @@
                     </div>
                     <div class="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
                         <div class="md:grid md:grid-cols-2 md:gap-8">
-                            <!-- <div>
-                <h3 class="text-sm font-semibold tracking-wider text-gray-300 uppercase">Solutions</h3>
-                <ul role="list" class="mt-4 space-y-4">
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">AI Writing</a></li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Content
-                      Generation</a></li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Marketing Copy</a>
-                  </li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Blog Automation</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="mt-12 md:mt-0">
-                <h3 class="text-sm font-semibold tracking-wider text-gray-300 uppercase">Support</h3>
-                <ul role="list" class="mt-4 space-y-4">
-                  <li><a href="#pricing" class="text-base text-gray-400 hover:text-white">Pricing</a>
-                  </li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Documentation</a>
-                  </li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Guides</a></li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">API Status</a></li>
-                </ul>
-              </div>
-            </div>
-            <div class="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 class="text-sm font-semibold tracking-wider text-gray-300 uppercase">Company</h3>
-                <ul role="list" class="mt-4 space-y-4">
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">About</a></li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Blog</a></li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Jobs</a></li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Press</a></li>
-                </ul>
-              </div> -->
-                            <!-- <div class="mt-12 md:mt-0">
-                <h3 class="text-sm font-semibold tracking-wider text-gray-300 uppercase">Legal</h3>
-                <ul role="list" class="mt-4 space-y-4">
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Privacy Policy</a>
-                  </li>
-                  <li><a href="#" class="text-base text-gray-400 hover:text-white">Terms of
-                      Service</a></li>
-                </ul>
-              </div> -->
+                        </div>
+                        <div class="md:grid md:grid-cols-2 md:gap-8">
                         </div>
                     </div>
                 </div>
@@ -881,22 +806,21 @@
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const closeMobileMenuButton = document.getElementById('close-mobile-menu-button');
             const mobileNav = document.getElementById('mobile-nav');
-            const mobileNavLinks = mobileNav.querySelectorAll('.mobile-nav-link'); // Get all links in mobile nav
+            const mobileNavLinks = mobileNav.querySelectorAll('.mobile-nav-link');
 
             if (mobileMenuButton && mobileNav && closeMobileMenuButton) {
                 mobileMenuButton.addEventListener('click', function () {
                     mobileNav.classList.add('open');
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+                    document.body.style.overflow = 'hidden';
                 });
                 closeMobileMenuButton.addEventListener('click', function () {
                     mobileNav.classList.remove('open');
-                    document.body.style.overflow = ''; // Re-enable scrolling
+                    document.body.style.overflow = '';
                 });
-                // Close nav when a link is clicked
                 mobileNavLinks.forEach(link => {
                     link.addEventListener('click', () => {
                         mobileNav.classList.remove('open');
-                        document.body.style.overflow = ''; // Re-enable scrolling
+                        document.body.style.overflow = '';
                     });
                 });
             }
@@ -924,6 +848,24 @@
                 let autoplayInterval;
                 const AUTOPLAY_DELAY = 5000;
 
+                // ** NEW: Setup track and slide widths **
+                if (slides.length > 0) {
+                    // Set the track width to be N * 100% of its parent (the carousel-container).
+                    // This makes the track wide enough to hold all slides side-by-side,
+                    // where each slide is conceptually 100% of the container width.
+                    track.style.width = `${slides.length * 100}%`;
+
+                    // Each slide should occupy 1/N of the track's total width.
+                    // This makes its actual width equal to 100% of the carousel-container's width.
+                    const slideBasisPercentage = 100 / slides.length;
+                    slides.forEach(slide => {
+                        slide.style.flexBasis = `${slideBasisPercentage}%`;
+                        // The 'flex-shrink-0' class handles shrinking.
+                        // 'flex-grow: 0' is default for flex items unless specified.
+                    });
+                }
+
+
                 function updateDots() {
                     if (!dotsContainer) return;
                     dotsContainer.innerHTML = '';
@@ -944,7 +886,16 @@
 
                 function goToSlide(index) {
                     currentIndex = (index + slides.length) % slides.length;
-                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+                    if (slides.length > 0) {
+                        // The percentage for translateX should be based on moving one "slide's worth" of the track.
+                        // Since each slide is (100 / slides.length)% of the track,
+                        // moving to currentIndex means translating by currentIndex * (that percentage).
+                        const translationPercentage = currentIndex * (100 / slides.length);
+                        track.style.transform = `translateX(-${translationPercentage}%)`;
+                    } else {
+                        track.style.transform = 'translateX(0%)';
+                    }
                     updateDots();
                 }
 
@@ -1004,7 +955,7 @@
                     } else if (touchEndX - touchStartX > swipeThreshold) {
                         goToSlide(currentIndex - 1);
                     }
-                    resetAutoplay(); // Restart autoplay after swipe, regardless of whether slide changed
+                    resetAutoplay();
                 }
 
                 carousel.addEventListener('keydown', (e) => {
