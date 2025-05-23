@@ -2,6 +2,16 @@
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-K8CD8VC8');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YourMarketer - AI Writing Assistant</title>
@@ -94,6 +104,7 @@
 
         .mobile-nav.open {
             transform: translateX(0);
+            z-index: 66;
             /* Slides in from the right */
         }
 
@@ -106,6 +117,10 @@
 </head>
 
 <body class="bg-white text-gray-800">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K8CD8VC8" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div class="flex flex-col min-h-screen">
         <header id="header" class="sticky top-0 z-50 w-full border-b border-gray-200 glassmorphism-header">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -127,7 +142,11 @@
                         </a>
                     </nav>
 
-                    <div class="md:hidden">
+                    <div class="md:hidden flex items-center space-x-4">
+                        <a href="/login"
+                            class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all">
+                            Login
+                        </a>
                         <button id="mobile-menu-button" class="text-gray-600 hover:text-indigo-600 focus:outline-none">
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -139,13 +158,14 @@
                 </div>
             </div>
 
-            <div id="mobile-nav" class="mobile-nav fixed inset-0 z-40 flex flex-col bg-white p-6 space-y-4 md:hidden">
+            <div id="mobile-nav"
+                class="mobile-nav fixed inset-0 z-60 flex flex-col bg-white opacity-100 bg-opacity-100 p-6 space-y-4 md:hidden"
+                style="background-color: white !important; opacity: 1 !important;padding-bottom: 224px;">
                 <div class="flex justify-between items-center">
                     <a href="#" class="flex items-center space-x-2 text-2xl font-bold text-gray-900">
                         <img src="images/dark-logo.png" alt="YourMarketer Logo"
                             class="h-8 w-auto rounded-lg object-contain"
                             onerror="this.style.display='none'; this.onerror=null; const p=document.createElement('div'); p.className='h-8 w-auto px-2 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm'; p.innerText='YM'; this.parentNode.insertBefore(p,this);">
-                        <span>YourMarketer</span>
                     </a>
                     <button id="close-mobile-menu-button"
                         class="text-gray-600 hover:text-indigo-600 focus:outline-none">
@@ -165,8 +185,8 @@
                     Get Started
                 </a>
             </div>
-        </header>
 
+        </header>
         <main class="flex-1">
             <section
                 class="relative bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 py-20 md:py-32 overflow-hidden">
